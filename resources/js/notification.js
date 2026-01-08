@@ -6,19 +6,31 @@ export const notifications = () => ({
     },
     add(title, message = '', type = 'success') {
         if (this.notification) {
-            this.remove();
+            clearTimeout(this.interval);
+            this.notification = null;
         }
 
         this.notification = {
             title: title,
             message: message,
             type: type,
-            visible: true
+            visible: false
         }
+
+        this.$nextTick(() => {
+            this.notification.visible = true;
+        });
+
+        this.interval = setTimeout(() => {
+            this.remove();
+        }, 3000);
     },
     remove() {
-        clearInterval(this.interval);
-        this.notification = null
+        this.notification.visible = false;
+
+        setTimeout(() => {
+            this.notification = null;
+        }, 300);
     }
 })
 

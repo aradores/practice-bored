@@ -1,5 +1,5 @@
 <div class="referral-system-header flex flex-col gap-11 mb-11">
-    @vite(['resources/js/flatpickr.js'])
+    {{-- @vite(['resources/js/flatpickr.js']) --}}
     <x-main.title>Referral System</x-main.title>
     <livewire:admin.referrals.balance-banner />
     <div class="flex flex-col xl:flex-row gap-11">

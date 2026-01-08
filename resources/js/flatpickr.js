@@ -7,7 +7,7 @@ document.addEventListener('alpine:init', function () {
         return {
             flatpickr_instance: null,
             init() {
-                
+
                 if (this.flatpickr_instance !== null) return;
 
                 let config = {
@@ -65,42 +65,89 @@ document.addEventListener('alpine:init', function () {
         };
     });
 
-    Alpine.data('date_range_picker', function (date_picker_id, { from, to }, maxDateToday) {
+    Alpine.data('date_range_picker', function (date_picker_id, { from = null, to = null }, maxDateToday = false) {
         return {
             flatpickr: null,
-            fromDate: null,
-            toDate: null,
-            init () {                
-                // console.log(no_max_date);
-                this.fromDate = from;
-                this.toDate = to;
-                
-                this.flatpickr = flatpickr("#"+ date_picker_id, {
+            fromDate: from,
+            toDate: to,
+
+            init() {
+                this.flatpickr = flatpickr("#" + date_picker_id, {
                     mode: "range",
-                    dateFormat: "Y-m-d", // Example: "2025-08-06 to 2025-08-10"
+                    dateFormat: "Y-m-d",
                     maxDate: maxDateToday ? "today" : null,
-                    defaultDate: [from, to],
-
+                    defaultDate: from && to ? [from, to] : null,
+                    appendTo: this.$root,
+                    // positionElement: document.querySelector("#" + date_picker_id),
                     onChange: (selectedDates, dateStr, instance) => {
-                        if (instance.selectedDates.length === 2) {
-                            const dateStrSplit = dateStr.split(' ');
-    
-                            let from = dateStrSplit[0]; // get the start date
-                            let to = dateStrSplit.length === 1 ? from : dateStrSplit[2]; // if dateStrSplit has more than 1 element it means there's selected end date
-    
-                            this.$wire.dispatch('date-range-picker-' + date_picker_id, {
-                                from: from,
-                                to: to
-                            });
+                        let start = null, end = null;
+
+                        if (selectedDates.length === 2) {
+                            start = instance.formatDate(selectedDates[0], "Y-m-d");
+                            end = instance.formatDate(selectedDates[1], "Y-m-d");
+                        } else if (selectedDates.length === 1) {
+                            start = end = instance.formatDate(selectedDates[0], "Y-m-d");
                         }
-                    },
 
+                        this.$wire.dispatch('date-range-picker-' + date_picker_id, {
+                            from: start,
+                            to: end
+                        });
+                    }
                 });
 
-                this.$wire.on('clear-' + date_picker_id, () => {
-                    this.flatpickr.setDate([this.fromDate, this.toDate], true);
+                this.$wire.on('clear-date-range-' + date_picker_id, () => {
+
+                    if (this.flatpickr) {
+                        this.flatpickr.clear();
+                    }
+
+                    this.fromDate = null;
+                    this.toDate = null;
+
+                    this.$wire.dispatch('date-range-picker-' + date_picker_id, {
+                        from: null,
+                        to: null
+                    });
                 });
-            },
+            }
         }
-    })
+    });
+
+
+   Alpine.data('date_time_picker', function (pickerId = null, date = null, minDateEnabled = false) {
+        return {
+            flatpickr_instance: null,
+            currentDate: date,
+            init() {
+                this.flatpickr_instance = flatpickr(this.$refs.datetime_picker, {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    time_24hr: true,
+                    defaultDate: this.currentDate,
+                    disableMobile: true,
+                    minuteIncrement: 1,
+                    appendTo: this.$root,
+                    minDate: minDateEnabled ? new Date() : null,
+                    onChange: (selectedDates, dateStr, instance) => {
+                        if (selectedDates.length > 0) {
+                            const selectedDate = instance.formatDate(selectedDates[0], "Y-m-d H:i");
+
+                            if (pickerId) {
+                                this.$wire.dispatch('date-time-changed-' + pickerId, {date_time : selectedDate});
+                            } else {
+                                this.$wire.dispatch('date-time-changed', selectedDate);
+                            }
+                        }
+                    }
+                });
+
+                if (pickerId) {
+                    this.$wire.on('clear-' + pickerId, () => {
+                        this.flatpickr_instance.setDate(this.currentDate, true);
+                    });
+                }
+            }
+        };
+    });
 });

@@ -7,7 +7,7 @@
     </div>
 
     @php
-        $user_roles = auth()->user()->roles()->pluck('slug')->toArray();
+        $user_roles = ['admin'];
     @endphp
 
     <nav class="w-full space-y-2" x-data="{
@@ -16,7 +16,7 @@
 
         @if (count(array_intersect(['admin', 'accountant', 'bookkeeper'], $user_roles)) > 0 || auth()->id() == 1)
             {{-- Dashboard --}}
-            <a href="{{ route('admin.dashboard') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.dashboard') ? 'bg-white bg-opacity-20 font-bold' : 'hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path
@@ -69,7 +69,7 @@
         @if (count(array_intersect(['admin', 'accountant', 'bookkeeper', 'account_officer'], $user_roles)) > 0 ||
                 auth()->id() == 1)
             {{-- Manage Users --}}
-            <a href="{{ route('admin.manage-users.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.manage-users.*') ? 'bg-white bg-opacity-20 font-bold' : 'hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path
@@ -95,7 +95,7 @@
             </a>
 
             {{-- Manage Merchants --}}
-            <a href="{{ route('admin.manage-merchants.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.manage-merchants.*') ? 'bg-white bg-opacity-20 font-bold' : 'hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path
@@ -106,7 +106,7 @@
             </a>
 
             {{-- Manage Products --}}
-            <a href="{{ route('admin.manage-products.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.manage-products.*') ? 'bg-white bg-opacity-20 font-bold' : ' hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path
@@ -123,7 +123,7 @@
             </a>
 
             {{-- Manage Services --}}
-            <a href="{{ route('admin.manage-services.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.manage-services.*') ? 'bg-white bg-opacity-20 font-bold' : ' hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path
@@ -157,7 +157,7 @@
 
         @if (count(array_intersect(['admin', 'accountant', 'bookkeeper', 'csr'], $user_roles)) > 0 || auth()->id() == 1)
             {{-- Disputes --}}
-            <a href="{{ route('admin.disputes.return-orders.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.disputes.*') ? 'bg-white bg-opacity-20 font-bold' : ' hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -168,7 +168,7 @@
             </a>
 
             {{-- Inquiries --}}
-            <a href="{{ route('admin.inquiries.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.inquiries.*') ? 'bg-white bg-opacity-20 font-bold' : ' hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="14" height="12" viewBox="0 0 14 12" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -179,10 +179,10 @@
             </a>
         @endif
 
-        
+
         @if (count(array_intersect(['admin', 'accountant', 'bookkeeper'], $user_roles)) > 0 || auth()->id() == 1)
             {{-- Referral System --}}
-            <a href="{{ route('admin.referrals.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.referrals.*') ? 'bg-white bg-opacity-20 font-bold' : ' hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="16" height="16" viewBox="0 0 16 16"
                     fill="none">
@@ -198,9 +198,9 @@
                 </svg>
                 <p>Referral System</p>
             </a>
-            
+
             {{-- System Balances --}}
-            <a href="{{ route('admin.system-balances.index') }}"
+            <a href=""
                 class="{{ request()->routeIs('admin.system-balances.*') ? 'bg-white bg-opacity-20 font-bold' : ' hover:bg-white hover:bg-opacity-10' }} flex gap-3 items-center px-3 py-2 text-white rounded-lg">
                 <svg width="14" height="12" viewBox="0 0 14 12" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd"

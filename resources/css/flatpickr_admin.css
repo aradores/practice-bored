@@ -1,0 +1,35 @@
+/*================================
+        Admin Flatpickr
+================================*/
+.flatpickr-monthSelect-month:hover {
+    background-color: #7f56d9;
+    color: #ffff;
+}
+
+.flatpickr-monthSelect-month.selected {
+    background-color: #7f56d9 !important;
+    color: #ffff;
+}
+
+.flatpickr-day.selected{
+    background-color: #7f56d9 !important;
+    color: #ffff !important;
+    border: none !important;
+}
+
+/*================================
+    Admin Date Range Picker
+================================*/
+
+.flatpickr-calendar .flatpickr-day.startRange, .flatpickr-calendar .flatpickr-day.endRange {
+    background-color: #7f56d9 !important;
+    border: none;
+}
+.flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)){
+    box-shadow: 0 0 0 #f5f2ff, 0 0 0 #f5f2ff !important;
+}
+.flatpickr-calendar .flatpickr-day.inRange, .flatpickr-day.today.inRange {
+    background-color: #f5f2ff !important;
+    border: none ;
+    box-shadow: -5px 0 0 #f5f2ff, 5px 0 0 #f5f2ff;
+}

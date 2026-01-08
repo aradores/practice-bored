@@ -21,5 +21,3 @@ Alpine.plugin(mask);
 Swiper.use([Navigation, Pagination, Autoplay, Thumbs]);
 Chart.register(...registerables);
 window.Chart = Chart;
-
-alert('adi')

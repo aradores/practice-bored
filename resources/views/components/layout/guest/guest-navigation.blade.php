@@ -109,16 +109,16 @@
                         class="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white text-center rounded-md">Open the
                         app</a>
                 @else
-                    @auth
+                    @guest
                         <a href="{{ route('sign-in') }}"
                             class="{{ request()->routeIs('sign-in') ? 'underline font-bold' : '' }} {{ request()->routeIs('home') || request()->routeIs('about') || request()->routeIs('about') || request()->routeIs('contact-us') || request()->routeIs('sign-in') ? 'hover:bg-black hover:bg-opacity-10' : 'hover:bg-rp-neutral-100' }} w-full px-3 py-2 text-center rounded-md">Sign-in</a>
-                    @endauth
-                    @guest
+                    @endguest
+                    @auth
                         <div role="button" tabindex="0" @keyup.enter="setLogoutVisible"
                             @click="setLogoutVisible"
                             class="{{ request()->routeIs('home') || request()->routeIs('about') || request()->routeIs('about') || request()->routeIs('contact-us') || request()->routeIs('sign-in') ? 'hover:bg-black hover:bg-opacity-10' : 'hover:bg-rp-neutral-100' }} w-full px-3 py-2 text-center rounded-md">
                             Logout</a>
-                        @endguest
+                    @endauth
                 @endif
             </div>
         </div>

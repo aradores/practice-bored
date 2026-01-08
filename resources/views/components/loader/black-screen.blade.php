@@ -1,4 +1,4 @@
 
-<div {{ $attributes->merge(['class' => "fixed inset-0 backdrop-blur-sm bg-black/50 z-50" ]) }}>
+<div {{ $attributes->merge(['class' => "fixed inset-0 bg-black bg-opacity-50" ]) }}>
     {{ $slot }}
 </div>

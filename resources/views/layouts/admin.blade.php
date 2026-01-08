@@ -13,6 +13,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/flatpickr.js', 'resources/css/flatpickr.css', 'resources/css/flatpickr_admin.css'])
 
     <!-- Styles -->
     @livewireStyles
@@ -57,9 +58,9 @@
     @stack('scripts')
     @livewireScripts
     <x-toasts />
-    @if(session()->has('notify'))
+    @if (session()->has('notify'))
         <div x-data="{
-            init () {
+            init() {
                 this.$nextTick(() => {
                     this.$dispatch('notify', {{ json_encode(session('notify')) }});
                 })

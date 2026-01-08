@@ -17,14 +17,55 @@
 
 </head>
 
-<body class="font-sans antialiased dark:bg-black dark:text-white/50">
 
+    <body class="font-sans antialiased scrollbar-hide">
+    <div class="min-h-screen bg-rp-neutral-100">
+
+        <!-- Page Content -->
+        <div class="h-screen">
+            <div class="flex flex-row h-full w-full">
+                <!-- Left Sidebar -->
+                <div class="max-w-[250px] w-[250px] px-5 pb-5 pt-3 bg-purple-gradient-to-bottom h-full overflow-auto">
+                    @livewire('admin.components.admin-left-sidebar')
+                </div>
+
+                <!-- Main Content -->
+                <div class="w-[calc(100%-250px)] h-full shadow border">
+                    <div class="bg-white shadow-md">
+                        @livewire('admin.components.admin-top-navigation')
+                    </div>
+                    <main class="overflow-auto h-[calc(100vh-65px)]">
+                        {{ $slot }}
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="bg-footer2 py-5 text-center">
+            <div class="container text-white mx-auto px-3">
+                RePay.ph is regulated by the Banko Sentral ng Pilipinas. All trademarks pertaining to RePay.ph are
+                owned by RePay Digital Solutions. All rights reserved © {{ now()->format('Y') }}.
+            </div>
+        </div>
+    </footer>
 
     @stack('modals')
     @stack('scripts')
     @livewireScripts
     <x-toasts />
-
+    @if(session()->has('notify'))
+        <div x-data="{
+            init () {
+                this.$nextTick(() => {
+                    this.$dispatch('notify', {{ json_encode(session('notify')) }});
+                })
+            }
+        }"></div>
+    @endif
 </body>
+
 
 </html>

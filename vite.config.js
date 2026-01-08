@@ -1,13 +1,14 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
-import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     plugins: [
         laravel({
             input: [
-                "resources/css/date-range-picker.css",
                 "resources/css/app.css",
+                "resources/css/flatpickr.css",
+                "resources/css/flatpickr_admin.css",
+                "resources/css/flatpickr_merchant.css",
                 "resources/js/app.js",
                 "resources/js/guest.js",
                 "resources/js/swiper-repay-features.js",
@@ -28,7 +29,6 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        tailwindcss(),
     ],
     server: {
         cors: true,

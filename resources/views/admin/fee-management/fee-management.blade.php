@@ -1,18 +1,20 @@
-<div class="flex h-full" x-data="{ selectedTab: @entangle('selectedTab'), secondaryTab: '' }">
-    @vite(['resources/js/flatpickr.js'])
-    <x-main.content class="grow !px-16 !py-10">
+<div class="flex h-full w-full flex-col" x-data="{ 
+    selectedTab: @entangle('selectedTab'), 
+    auditTrailTab: 'change-history' }">
+    <x-main.content class="grow !px-4 md:!px-8 lg:!px-16 !py-6 md:!py-10">
         <x-main.action-header>
             <x-slot:title>Fee Management</x-slot:title>
         </x-main.action-header>
+
         <div class="navigation w-full">
-            <div class="w-full flex mb-5">
-                <div class="navigation-buttons w-full flex border-b border-rp-neutral-300">
+            <div class="w-full flex flex-wrap xl:flex-nowrap mb-4 md:mb-5 gap-3 md:gap-0">
+                <div class="navigation-buttons flex overflow-x-auto md:overflow-visible border-b border-rp-neutral-300 w-full">
                     @foreach ($allowedTabs as $tab)
-                        <button @click="selectedTab = '{{ $tab }}' "
-                            x-bind:class="selectedTab === '{{ $tab }}' ?
-                                'border-b-2 border-primary-700 text-primary-700 font-bold' :
-                                'hover:border-b-2 hover:border-primary-700 hover:text-primary-700 text-rp-neutral-700'"
-                            class="w-44 py-2.5">
+                        <button @click="selectedTab = '{{ $tab }}'"
+                            x-bind:class="selectedTab === '{{ $tab }}'
+                                ? 'border-b-2 border-primary-700 text-primary-700 font-bold'
+                                : 'hover:border-b-2 hover:border-primary-700 hover:text-primary-700 text-rp-neutral-700'"
+                            class="whitespace-nowrap px-3 sm:px-4 lg:w-44 py-2.5 flex-shrink-0 text-sm sm:text-base">
                             @switch($tab)
                                 @case('manage-fees')
                                     Manage Fees
@@ -20,7 +22,6 @@
                                 @case('audit-trail')
                                     Audit Trail
                                     @break
-
                                 @default
                                     {{ $tab }}
                             @endswitch
@@ -28,115 +29,42 @@
                     @endforeach
                 </div>
 
-                {{--
-                            Todo: Add date filtering for upcoming components (Audit Trail - Change history & KPIs)
-                    --}}
-                <div class="date-filter relative text-nowrap" x-cloak x-show="selectedTab === 'KPIs'">
-                    <div class="flex flex-col xl:flex-row xl:items-center gap-2.5">
-                        <div>Filter by:</div>
-                        <div class="kpi_date_filter " x-data="referral_system({ appendTo: document.querySelector('.kpi_date_filter') })">
-                            <div class="absolute top-1/2 translate-x-1/3 -translate-y-1/2">
-                                <x-icon.calendar-outline />
-                            </div>
-                            <input type="text" x-ref="month_filter" {{ 'disabled' }}
-                                class="w-full xl:w-max pl-9 rounded-lg border text-left focus:outline-none border-neutral-300 focus:!border-neutral-300 focus:ring-2 focus:ring-primary-500 focus:ring-offset-white focus:ring-offset-2 transition-all duration-200 p-2 h-full" />
-                        </div>
+                <div class="date-filter relative text-nowrap mt-3 xl:mt-0 xl:ml-auto"
+                    x-cloak x-show="selectedTab === 'KPIs' || auditTrailTab === 'change-history' && selectedTab === 'audit-trail' ">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2.5">
+                        <div class="text-sm sm:text-base">Filter by:</div>
+                        <x-date-picker.date-range-picker
+                            id="fee-management"
+                            :from='null'
+                            :to='null'
+                            :maxDateToday="false"
+                            placeholder="Select a date range"
+                            class="w-1/3"
+                        />
+
+                        {{-- <x-button.primary-gradient-button size="sm" class="px-3" @click="$dispatch('clear-date-range-fee-management')">
+                            <span>
+                                <x-icon.reset width="22" height="22" />
+                            </span>
+                        </x-button.primary-gradient-button> --}}
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="content">
-            <div class="posts" x-cloak x-show="selectedTab === 'manage-fees'">
-                <livewire:admin.fee-management.manage-fees />
-            </div>
-            <div class="posts" x-cloak x-show="selectedTab === 'audit-trail'">Audit Trail Tabx</div>
-            <div class="posts" x-cloak x-show="selectedTab === 'KPIs'">KPIs Tab</div>
+        <div class="content w-full">
+            <template x-if="selectedTab === 'manage-fees'">
+                <livewire:admin.fee-management.manage-fees wire:key="fee-management-component" />
+            </template>
+
+            <template x-if="selectedTab === 'audit-trail'">
+                <livewire:admin.fee-management.audit-trails wire:key="audit-trail-component" />
+            </template>
+
+            <template x-if="selectedTab === 'KPIs'">
+                <livewire:admin.fee-management.kpi wire:key="kpi-component" />
+            </template>
         </div>
     </x-main.content>
-
+    <div class="spacer my-2 w-full"></div>
 </div>
-
-@push('styles')
-    <style>
-        .flatpickr-calendar {
-            padding: 8px 4px !important;
-        }
-
-        .flatpickr-rContainer {
-            display: block !important;
-        }
-
-        .flatpickr-months {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 0 4px !important;
-        }
-
-        .flatpickr-month {
-            display: flex !important;
-            align-items: center !important;
-        }
-
-        .flatpickr-prev-month {
-            display: flex !important;
-            align-items: center !important;
-            padding: 0px !important;
-            position: relative !important;
-        }
-
-        .flatpickr-next-month {
-            display: flex !important;
-            align-items: center !important;
-            padding: 0px !important;
-            position: relative !important;
-        }
-
-        .flatpickr-current-month {
-            display: flex !important;
-            margin: 0 auto !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding-top: 0 !important;
-        }
-
-        .flatpickr-innerContainer {
-            display: block !important;
-            width: 100% !important;
-            margin-top: 8px;
-        }
-
-        .flatpickr-monthSelect-months {
-            display: grid !important;
-            gap: 2px;
-            grid-template-columns: repeat(3, 1fr) !important;
-            place-content: center;
-            width: 100% !important;
-        }
-
-        .flatpickr-monthSelect-month {
-            padding: 8px 4px !important;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-
-        .flatpickr-monthSelect-month:hover {
-            background-color: #7f56d9;
-            color: #ffff;
-        }
-
-        .flatpickr-monthSelect-month.selected {
-            background-color: #7f56d9 !important;
-            color: #ffff;
-        }
-
-        .flatpickr-disabled {
-            color: #BBC5CD;
-        }
-
-        .flatpickr-disabled:hover {
-            background-color: #BBC5CD !important;
-        }
-    </style>
-@endpush

@@ -1,6 +1,13 @@
 <div x-data="notifications">
     <template x-if="notification != null">
-        <div x-show="notification.visible"
+        <div 
+            x-show="notification.visible"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 translate-y-4"
             class="fixed bottom-3 left-[50%] translate-x-[-50%] z-[9999] shadow-lg w-[90vw] max-w-[796px] gap-6 p-4 rounded-xl bg-white"
             :class="{
                 'border-l-success-600': notification.type === 'success',

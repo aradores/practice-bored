@@ -3,14 +3,21 @@
     confirmationModal: {
         visible: $wire.entangle('visible'),
         actionType: $wire.entangle('actionType')
-    }
+    },
+    formModal: @entangle('formModal'),
 }">
+    <div class="breadcrumbs flex items-center gap-x-3 text-sm mb-3">
+        <a class="font-bold border-b border-transparent hover:border-rp-neutral-500" wire:navigate href="{{ session('admin.manage-merchants.index.back', route('admin.manage-merchants.index')) }}">Manage Merchants</a>
+        <x-icon.solid-arrow-right />
+        <p class="text-rp-neutral-500">Merchant Details</p>
+    </div>
     <x-main.action-header>
         <x-slot:title>Merchant Details</x-slot:title>
         <x-slot:actions>
             @switch($merchant->status)
                 @case('pending')
-                    <x-button.primary-gradient-button @click="confirmationModal.visible=true;confirmationModal.actionType='approve';" class="w-36">approve</x-button.primary-gradient-button>
+                    {{-- <x-button.primary-gradient-button @click="confirmationModal.visible=true;confirmationModal.actionType='approve';" class="w-36">approve</x-button.primary-gradient-button> --}}
+                    <x-button.primary-gradient-button @click="formModal=true; confirmationModal.actionType='approve';" class="w-36">approve</x-button.primary-gradient-button>
                     <x-button.outline-button @click="confirmationModal.visible=true;confirmationModal.actionType='deny';" color="primary" class="w-36">deny</x-button.outline-button>
                     @break
                 @case('verified')
@@ -42,12 +49,13 @@
         <p>Account Number: {{ $merchant->account_number }}</p>
     </div>
 
-    <x-tab alignment="middle">
+    <x-tab alignment="middle" class="border-b border-rp-neutral-300">
         <x-tab.tab-item href="{{ route('admin.manage-merchants.show.basic-details', ['merchant' => $merchant]) }}" color="primary" :isActive="request()->routeIs('admin.manage-merchants.show.basic-details')" class="w-56">Basic Details</x-tab.tab-item>
         <x-tab.tab-item href="{{ route('admin.manage-merchants.show.transactions.cash-inflow', ['merchant' => $merchant]) }}" color="primary" :isActive="request()->routeIs('admin.manage-merchants.show.transactions.*')" class="w-56">Transactions</x-tab.tab-item>
         <x-tab.tab-item href="{{ route('admin.manage-merchants.show.disputes.return-orders.index', ['merchant' => $merchant]) }}" color="primary" :isActive="request()->routeIs('admin.manage-merchants.show.disputes.*')" class="w-56">Disputes</x-tab.tab-item>
         <x-tab.tab-item href="{{ route('admin.manage-merchants.show.products.index', ['merchant' => $merchant]) }}" color="primary" :isActive="request()->routeIs('admin.manage-merchants.show.products.*')" class="w-56">Products</x-tab.tab-item>
         <x-tab.tab-item href="{{ route('admin.manage-merchants.show.services.index', ['merchant' => $merchant]) }}" color="primary" :isActive="request()->routeIs('admin.manage-merchants.show.services.*')" class="w-56">Services</x-tab.tab-item>
+        <x-tab.tab-item href="{{ route('admin.manage-merchants.show.manage-fees', ['merchant' => $merchant]) }}" color="primary" :isActive="request()->routeIs('admin.manage-merchants.show.manage-fees')" class="w-56">Manage Fees</x-tab.tab-item>
     </x-tab>
 
     <x-modal x-model="confirmationModal.visible">
@@ -64,8 +72,27 @@
                     color="primary" class="w-1/2" x-text="confirmationModal.actionType"></x-button.filled-button>
             </x-slot:action_buttons>
         </x-modal.confirmation-modal>
-
     </x-modal>
+
+    <x-modal x-model="formModal">
+        <x-modal.form-modal class="!gap-0 !p-6">
+            <x-main.title>Initial Merchant Configuration</x-main.title>
+            <livewire:admin.components.manage-fees.fee-form 
+                wire:key="{{ $merchant->id }}_manage_fees_modal" 
+                :merchant="$merchant" 
+                :isApproval="true" />
+
+            {{-- <x-slot:action_buttons>
+                <x-button.outline-button 
+                    color="primary" 
+                    class="w-1/2" 
+                    @click="formModal.visible=false">
+                    Cancel
+                </x-button.outline-button>
+            </x-slot:action_buttons> --}}
+        </x-modal.form-modal>
+    </x-modal>
+
 
     {{-- Toast Notification --}}
     @if (session()->has('success'))

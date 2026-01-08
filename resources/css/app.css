@@ -35,13 +35,13 @@
 
 @layer components {
     .bg-footer1 {
-        @apply bg-gray-700;
+        @apply bg-gray-700; 
     }
 
     .bg-footer2 {
         @apply bg-[#37474F];
     }
-
+    
     .bg-purple-gradient-to-bottom {
         background: rgb(127,86,217);
         background: linear-gradient(176deg, rgba(127,86,217,1) 0%, rgba(177,80,192,1) 100%);
@@ -49,9 +49,9 @@
 
     .bg-purple-gradient-to-right {
         background: rgb(127,86,217);
-        background: linear-gradient(90deg, rgba(127,86,217,1) 0%, rgba(177,80,192,1) 100%);
+        background: linear-gradient(90deg, rgba(127,86,217,1) 0%, rgba(177,80,192,1) 100%); 
     }
-
+    
     .status-pending {
         @apply border text-center border-purple-600 text-purple-600 bg-purple-100 rounded-md w-24;
     }
@@ -71,16 +71,16 @@
     .bg-pink-gradient-to-right {
         background: rgb(255,61,143);
         background: linear-gradient(90deg, rgba(255,61,143,1) 0%, rgba(255,138,187,1) 100%);
-    }
+    }   
 
     .bg-repay-pink-500 {
         background: #FF3D8F;
     }
-
+    
     .bg-repay-pink-600 {
         background: #F70068;
     }
-
+    
     .bg-repay-pink-700 {
         background: #9E0043;
     }
@@ -92,7 +92,7 @@
     .status-unpaid, .status-to_ship, .ship-to-receive, .status-pending-approval, .status-dispute-pending {
         @apply border border-gray-600 bg-gray-200 text-gray-600 rounded-md text-center p-1.5 text-sm;
     }
-
+    
 
     .status-partial, .status-return_in_progress, .status-dispute_in_progress {
        @apply border border-yellow-600 bg-yellow-200 text-yellow-600 rounded-md text-center w-20;
@@ -101,11 +101,11 @@
     .service-booking-status-pending {
         @apply border border-rp-yellow-600 bg-rp-yellow-200 text-rp-yellow-600 rounded-md text-center w-20;
     }
-
+    
     .status-cancelled, .status-overdue, .status-rejected {
         @apply border border-red-600 bg-red-200 text-red-600 rounded-md text-center;
     }
-
+    
     .status-cancelled, .status-overdue, .status-rejected {
         @apply w-20;
     }
@@ -255,93 +255,4 @@ ctor[type=range]::-webkit-slider-thumb {
 
 input[type="checkbox"] {
     @apply rounded-sm scale-125 cursor-pointer border border-rp-neutral-600 accent-rp-neutral-600;
-}
-
-
-@import "tailwindcss";
-
-/* Define theme in CSS */
-@theme {
-  --font-sans: "Poppins", sans-serif;
-
-  /* Your custom colors */
-  --color-rp-dark-pink-600: #F70068;
-  --color-primary-25: #FCFAFF;
-  --color-primary-50: #F9F5FF;
-  --color-primary-100: #F4EBFF;
-  --color-primary-200: #E9D7FE;
-  --color-primary-300: #D6BBFB;
-  --color-primary-400: #B692F6;
-  --color-primary-500: #9E77ED;
-  --color-primary-600: #7F56D9;
-  --color-primary-700: #6941C6;
-  --color-primary-800: #53389E;
-  --color-primary-900: #42307D;
-
-  --color-rp-neutral-25: #FCFDFD;
-  --color-rp-neutral-50: #F5F6F8;
-  --color-rp-neutral-100: #EEF0F2;
-  --color-rp-neutral-200: #D3DADE;
-  --color-rp-neutral-300: #BBC5CD;
-  --color-rp-neutral-400: #A8B5BE;
-  --color-rp-neutral-500: #90A1AD;
-  --color-rp-neutral-600: #647887;
-  --color-rp-neutral-700: #42505A;
-  --color-rp-neutral-800: #2A3339;
-  --color-rp-neutral-900: #22292E;
-
-  /* Gray colors - IMPORTANT for bg-gray-700 to work */
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;  /* THIS was missing! */
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
-  --color-gray-950: #030712;
-
-  /* Rest of your colors... */
-  --color-rp-yellow-200: #FEDF89;
-  --color-rp-yellow-500: #F79009;
-  --color-rp-yellow-600: #DC6803;
-
-  --color-rp-red-25: #FFFAFC;
-  --color-rp-red-50: #FFF0F6;
-  --color-rp-red-100: #FFE0ED;
-  --color-rp-red-200: #FFB3D3;
-  --color-rp-red-300: #FF8ABB;
-  --color-rp-red-400: #FF66A6;
-  --color-rp-red-500: #FF3D8F;
-  --color-rp-red-600: #F70068;
-  --color-rp-red-700: #9E0043;
-  --color-rp-red-800: #66002B;
-  --color-rp-red-900: #520022;
-
-  --color-rp-pink-500: #F93386;
-  --color-rp-green-200: #BEF4ED;
-  --color-rp-green-600: #149D8C;
-  --color-rp-blue-200: #ADDCFF;
-  --color-rp-blue-600: #1C7EBF;
-  --color-rp-purple-200: #E9D7FE;
-  --color-rp-purple-600: #7F56D9;
-
-  /* Border radius */
-  --radius-1: 1rem;
-
-  /* Box shadows */
-  --shadow-small-dark: 0px 2px 4px 0px rgba(0, 0, 0, 0.10), 0px 0px 2px 0px rgba(0, 0, 0, 0.25);
-  --shadow-medium-dark: 0px 2px 4px 0px rgba(0, 0, 0, 0.10), 0px 4px 8px 0px rgba(0, 0, 0, 0.25);
-  --shadow-custom-inset: inset 0px 0px 8px rgba(0, 0, 0, 0.25);
-  --shadow-custom-dropdown: 0 30px 84px 0 rgba(19, 10, 46, 0.08), 0 8px 32px 0 rgba(19, 10, 46, 0.07), 0 3px 14px 0 rgba(19, 10, 46, 0.03), 0 1px 3px 0 rgba(19, 10, 46, 0.13);
-
-  /* Font sizes */
-  --text-3\.5xl: 2rem;
-}
-
-/* Your custom styles */
-body {
-  font-family: var(--font-sans);
 }
