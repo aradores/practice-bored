@@ -1,0 +1,12 @@
+.referrer-filter-date .flatpickr-calendar {
+    position: absolute !important;
+    top: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+}
+
+.referrer-details-filter-date .flatpickr-calendar {
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+}

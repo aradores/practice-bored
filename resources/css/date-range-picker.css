@@ -1,0 +1,17 @@
+.flatpickr-calendar .flatpickr-day.startRange, .flatpickr-calendar .flatpickr-day.endRange {
+    background-color: #FF3D8F !important;
+    color: #ffff !important;
+    border-radius: 50%;
+    border: none !important;
+}
+
+.flatpickr-calendar .flatpickr-day.inRange {
+    background-color: #FFF0F6 !important;
+    /* box-shadow: #FF3D8F !important; */
+    border: none !important;
+    box-shadow: -5px 0 0 #FFF0F6, 5px 0 0 #FFF0F6;
+}
+
+.flatpickr-calendar .flatpickr-day.endRange {
+    box-shadow: none !important;
+}

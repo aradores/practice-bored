@@ -1,0 +1,32 @@
+.flatpickr-months .flatpickr-prev-month.flatpickr-prev-month {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+.flatpickr-months .flatpickr-next-month.flatpickr-next-month {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+.flatpickr-calendar .flatpickr-months {
+    /* background-color: red; */
+    position: relative !important;
+    padding: 12px 8px !important;
+}
+
+.flatpickr-calendar .flatpickr-innerContainer, .flatpickr-calendar .flatpickr-rContainer, .flatpickr-calendar .flatpickr-days, 
+.flatpickr-calendar .flatpickr-innerContainer .flatpickr-days .dayContainer {
+    width: 100% !important;
+}
+
+.flatpickr-calendar .flatpickr-days {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.flatpickr-calendar .flatpickr-innerContainer .flatpickr-days .dayContainer {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    /* max-width: none !important; */
+}

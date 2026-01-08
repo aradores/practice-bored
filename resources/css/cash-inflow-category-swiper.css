@@ -1,0 +1,6 @@
+.cash-inflow-category-swiper .swiper-wrapper {
+    overflow: hidden;
+}
+.cash-inflow-category-swiper .swiper-wrapper .swiper-slide {
+    width: 350px;
+}
