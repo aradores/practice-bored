@@ -1,5 +1,5 @@
-<div class="flex h-full w-full flex-col" x-data="{ 
-    selectedTab: @entangle('selectedTab'), 
+<div class="flex h-full w-full flex-col" x-data="{
+    selectedTab: @entangle('selectedTab'),
     auditTrailTab: 'change-history' }">
     <x-main.content class="grow !px-4 md:!px-8 lg:!px-16 !py-6 md:!py-10">
         <x-main.action-header>
@@ -52,19 +52,11 @@
             </div>
         </div>
 
-        <div class="content w-full">
-            <template x-if="selectedTab === 'manage-fees'">
-                <livewire:admin.fee-management.manage-fees wire:key="fee-management-component" />
-            </template>
 
-            <template x-if="selectedTab === 'audit-trail'">
-                <livewire:admin.fee-management.audit-trails wire:key="audit-trail-component" />
-            </template>
-
-            <template x-if="selectedTab === 'KPIs'">
-                <livewire:admin.fee-management.kpi wire:key="kpi-component" />
-            </template>
-        </div>
     </x-main.content>
+
+    keke
+                        @livewire('bastardo')
+
     <div class="spacer my-2 w-full"></div>
 </div>
