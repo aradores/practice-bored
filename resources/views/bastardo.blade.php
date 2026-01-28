@@ -77,6 +77,62 @@
         </div>
     </form>
 
+    <div>
+    <div class="mb-6 space-y-4">
+        <!-- Search Component (separate Livewire component) -->
+        <div>
+            <input
+                type="text"
+                wire:model.live="search"
+                placeholder="Search users..."
+                class="w-full px-4 py-2 border rounded-lg"
+            >
+        </div>
+
+        <!-- Filters -->
+        <div class="flex gap-4">
+            <select wire:model.live="filters.status" class="px-4 py-2 border rounded-lg">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+
+            <input
+                type="date"
+                wire:model.live="filters.date_from"
+
+                placeholder="From"
+
+                class="px-4 py-2 border rounded-lg"
+
+            >
+
+            <input
+                type="date"
+                wire:model.live="filters.date_to"
+                placeholder="To"
+                class="px-4 py-2 border rounded-lg"
+            >
+        </div>
+
+        <!-- Per Page -->
+        <div>
+            <select wire:model.live="perPage" class="px-4 py-2 border rounded-lg">
+                <option value="10">10 per page</option>
+                <option value="25">25 per page</option>
+                <option value="50">50 per page</option>
+                <option value="100">100 per page</option>
+            </select>
+        </div>
+
+    </div>
+
+    @livewire(App\Livewire\UsersTable::class)
+</div>
+
+
+
+
     <!-- Include the base form template (for confirmation modal and messages) -->
     @include('admin.components.forms.base-form')
 </div>
