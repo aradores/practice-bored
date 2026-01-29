@@ -52,7 +52,104 @@
         </table>
     </div>
 
-    <div class="mt-4">
-        {{ $data->links() }}
-    </div>
+    {{-- Smart Pagination --}}
+    @if($data->hasPages())
+        <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            {{-- Results Info --}}
+            <div class="text-sm text-gray-700">
+                Showing <span class="font-medium">{{ $data->firstItem() }}</span>
+                to <span class="font-medium">{{ $data->lastItem() }}</span>
+                of <span class="font-medium">{{ $data->total() }}</span> results
+            </div>
+
+            {{-- Pagination Links --}}
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                {{-- Previous Button --}}
+                @if ($data->onFirstPage())
+                    <span class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                @else
+                    <button wire:click="previousPage" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                @endif
+
+                {{-- Smart Page Numbers --}}
+                @php
+                    $currentPage = $data->currentPage();
+                    $lastPage = $data->lastPage();
+                    $onEachSide = $paginationLinks ?? 2;
+
+                    // Calculate range
+                    $start = max(1, $currentPage - $onEachSide);
+                    $end = min($lastPage, $currentPage + $onEachSide);
+
+                    // Adjust if we're near the start or end
+                    if ($currentPage <= $onEachSide) {
+                        $end = min($lastPage, ($onEachSide * 2) + 1);
+                    }
+                    if ($currentPage > $lastPage - $onEachSide) {
+                        $start = max(1, $lastPage - ($onEachSide * 2));
+                    }
+                @endphp
+
+                {{-- First Page + Ellipsis --}}
+                @if($start > 1)
+                    <button wire:click="gotoPage(1)" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20">
+                        1
+                    </button>
+                    @if($start > 2)
+                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
+                            ...
+                        </span>
+                    @endif
+                @endif
+
+                {{-- Page Numbers --}}
+                @for ($page = $start; $page <= $end; $page++)
+                    @if ($page == $currentPage)
+                        <span class="relative z-10 inline-flex items-center bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:z-20">
+                            {{ $page }}
+                        </span>
+                    @else
+                        <button wire:click="gotoPage({{ $page }})" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20">
+                            {{ $page }}
+                        </button>
+                    @endif
+                @endfor
+
+                {{-- Ellipsis + Last Page --}}
+                @if($end < $lastPage)
+                    @if($end < $lastPage - 1)
+                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
+                            ...
+                        </span>
+                    @endif
+                    <button wire:click="gotoPage({{ $lastPage }})" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20">
+                        {{ $lastPage }}
+                    </button>
+                @endif
+
+                {{-- Next Button --}}
+                @if ($data->hasMorePages())
+                    <button wire:click="nextPage" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                @else
+                    <span class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                @endif
+            </nav>
+        </div>
+    @endif
 </div>

@@ -18,6 +18,7 @@ abstract class BaseTable extends Component
 
     // Pagination
     public int $perPage = 10;
+    public int $paginationLinks = 5; // Number of page links to show on each side
 
     protected $listeners = [
         'searchUpdated' => 'handleSearch',
@@ -172,6 +173,7 @@ abstract class BaseTable extends Component
             'data' => $this->getData(),
             'headers' => $this->headers(),
             'sortableColumns' => $this->sortableColumns(),
+            'paginationLinks' => $this->paginationLinks,
         ]);
     }
 }
