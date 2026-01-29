@@ -167,6 +167,38 @@ abstract class BaseTable extends Component
         $this->resetPage();
     }
 
+    /**
+     * Define custom column renderers
+     * Return array of column => callback
+     * Callback receives ($row, $column)
+     */
+    protected function columnRenderers(): array
+    {
+        return [];
+    }
+
+    /**
+     * Check if a column has a custom renderer
+     */
+    protected function hasCustomRenderer(string $column): bool
+    {
+        return isset($this->columnRenderers()[$column]);
+    }
+
+    /**
+     * Render a column with custom renderer
+     */
+    protected function renderColumn($row, string $column)
+    {
+        $renderers = $this->columnRenderers();
+
+        if (isset($renderers[$column])) {
+            return $renderers[$column]($row, $column);
+        }
+
+        return data_get($row, $column);
+    }
+
     public function render()
     {
         return view('livewire.base-table', [
