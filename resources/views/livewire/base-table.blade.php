@@ -6,6 +6,14 @@
         </div>
     @endif
 
+    {{-- DEBUG: Show if columnRenderers exist --}}
+    @if(count($this->columnRenderers()) > 0)
+        <div class="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded">
+            <strong>DEBUG:</strong> Found {{ count($this->columnRenderers()) }} custom column renderer(s):
+            {{ implode(', ', array_keys($this->columnRenderers())) }}
+        </div>
+    @endif
+
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -37,7 +45,17 @@
                     <tr class="hover:bg-gray-50">
                         @foreach($headers as $column => $label)
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ data_get($row, $column) }}
+                                {{-- DEBUG: Show which renderer is being used --}}
+                                @php
+                                    $renderers = $this->columnRenderers();
+                                    $hasRenderer = isset($renderers[$column]);
+                                @endphp
+
+                                @if($hasRenderer)
+                                    <span class="text-xs text-gray-400">[custom]</span>
+                                @endif
+
+                                {!! $this->renderColumn($row, $column) !!}
                             </td>
                         @endforeach
                     </tr>
@@ -152,4 +170,26 @@
             </nav>
         </div>
     @endif
+    <script>
+        // Create a global confirm function
+        window.confirmAction = function (options) {
+            return new Promise((resolve) => {
+                const {
+                    title = 'Confirm Action',
+                    message = 'Are you sure?',
+                    confirmText = 'Confirm',
+                    cancelText = 'Cancel',
+                    type = 'info' // info, success, warning, danger
+                } = options;
+
+                // You can use a fancy modal here, or use browser confirm for simplicity
+                if (confirm(`${title}\n\n${message}`)) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
+        };
+    </script>
+
 </div>
