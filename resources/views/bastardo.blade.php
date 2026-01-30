@@ -1,6 +1,15 @@
 <!-- resources/views/admin/components/forms/bastardo.blade.php -->
 <div>
 
+    <br>
+    <br>
+    <br>
+
+
+    <br>
+    <br>
+
+
     @livewire(App\Livewire\UsersTable::class)
 
 

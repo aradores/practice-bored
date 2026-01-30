@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UsersTable extends BaseTable
 {
+    public string $statusFilter = '';
+
+    public string $dateFrom = '';
+
+    public string $dateTo = '';
+
+    public int $paginationLinks = 3; // Will show: ... 7 8 9 [10] 11 12 13 ...
+
     // Listen for events from the confirm modal
     protected $listeners = [
         'user.delete' => 'deleteUser',
@@ -40,19 +48,22 @@ class UsersTable extends BaseTable
     {
         return [
             // Clickable name
-            'name' => function($row) {
+            'name' => function ($row) {
                 return sprintf(
                     '<a href="/users/%s" class="text-blue-600 hover:text-blue-900 font-medium">%s</a>',
+
                     $row->id,
                     e($row->name)
                 );
+
             },
 
             // Status badge
-            'status' => function($row) {
+            'status' => function ($row) {
                 $status = $row->status ?? 'active';
                 $colors = [
                     'active' => 'bg-green-100 text-green-800',
+
                     'inactive' => 'bg-gray-100 text-gray-800',
                     'suspended' => 'bg-red-100 text-red-800',
                 ];
@@ -64,104 +75,7 @@ class UsersTable extends BaseTable
                 );
             },
 
-            // Actions with confirm modal
-            // Actions with confirm modal
-'actions' => function($row) {
-    $status = $row->status ?? 'active';
-
-    return sprintf(
-        '<div class="flex items-center space-x-2">
-            <!-- Edit button -->
-            <button
-                wire:click="editUser(%s)"
-                class="text-blue-600 hover:text-blue-900"
-                title="Edit">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-            </button>
-
-            %s
-
-            %s
-
-            <!-- Delete button -->
-            <button
-                x-data
-                x-on:click="
-                    confirmAction({
-                        title: \'Delete User\',
-                        message: \'Are you sure you want to delete %s? This action cannot be undone.\',
-                        type: \'danger\',
-                        confirmText: \'Delete\'
-                    }).then(confirmed => {
-                        if (confirmed) {
-                            Livewire.dispatch(\'user.delete\', [%s]);
-                        }
-                    })
-                "
-                class="text-red-600 hover:text-red-900"
-                title="Delete">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-            </button>
-        </div>',
-        $row->id,
-        // Activate button
-        $status !== 'active' ? sprintf(
-            '<button
-                x-data
-                x-on:click="
-                    confirmAction({
-                        title: \'Activate User\',
-                        message: \'Activate %s?\',
-                        type: \'success\',
-                        confirmText: \'Activate\'
-                    }).then(confirmed => {
-                        if (confirmed) {
-                            Livewire.dispatch(\'user.activate\', [%s]);
-                        }
-                    })
-                "
-                class="text-green-600 hover:text-green-900"
-                title="Activate">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </button>',
-            e($row->name),
-            $row->id
-        ) : '',
-        // Suspend button
-        $status === 'active' ? sprintf(
-            '<button
-                x-data
-                x-on:click="
-                    confirmAction({
-                        title: \'Suspend User\',
-                        message: \'Suspend %s? They will not be able to access the system.\',
-                        type: \'warning\',
-                        confirmText: \'Suspend\'
-                    }).then(confirmed => {
-                        if (confirmed) {
-                            Livewire.dispatch(\'user.suspend\', [%s]);
-                        }
-                    })
-                "
-                class="text-yellow-600 hover:text-yellow-900"
-                title="Suspend">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                </svg>
-            </button>',
-            e($row->name),
-            $row->id
-        ) : '',
-        e($row->name),
-        $row->id
-    );
-},
+            'actions' => fn ($row) => view('tables.users.actions', compact('row'))->render(),
 
         ];
     }
@@ -177,6 +91,7 @@ class UsersTable extends BaseTable
     }
 
     // Called after delete confirmation
+
     public function deleteUser($userId)
     {
         User::findOrFail($userId)->delete();
@@ -188,12 +103,81 @@ class UsersTable extends BaseTable
     {
         User::findOrFail($userId)->update(['status' => 'active']);
         session()->flash('message', 'User activated successfully.');
+
     }
 
     // Called after suspend confirmation
+
     public function suspendUser($userId)
     {
         User::findOrFail($userId)->update(['status' => 'suspended']);
         session()->flash('message', 'User suspended successfully.');
+    }
+
+    /**
+     * Render custom filters for this table
+     * This method is called by the base-table.blade.php view
+     */
+    public function renderFilters(): string
+    {
+        return view('livewire.partials.users-table-filters', [
+            'statusFilter' => $this->statusFilter,
+            'dateFrom' => $this->dateFrom,
+            'dateTo' => $this->dateTo,
+            'search' => $this->search,
+            'perPage' => $this->perPage,
+        ])->render();
+    }
+
+    // These updatedX methods reset pagination when filters change
+    public function updatedStatusFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateTo()
+    {
+        $this->resetPage();
+    }
+
+    protected function searchableColumns(): array
+    {
+        return ['name', 'email'];
+    }
+
+    protected function applySearch(Builder $query): Builder
+    {
+        if (empty($this->search)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) {
+            $q->where('name', 'like', "%{$this->search}%")
+                ->orWhere('email', 'like', "%{$this->search}%");
+        });
+    }
+
+    protected function applyFilters(Builder $query): Builder
+    {
+        $query = parent::applyFilters($query);
+
+        if (! empty($this->statusFilter)) {
+            $query->where('status', $this->statusFilter);
+        }
+
+        if (! empty($this->dateFrom)) {
+            $query->whereDate('created_at', '>=', $this->dateFrom);
+        }
+
+        if (! empty($this->dateTo)) {
+            $query->whereDate('created_at', '<=', $this->dateTo);
+        }
+
+        return $query;
     }
 }

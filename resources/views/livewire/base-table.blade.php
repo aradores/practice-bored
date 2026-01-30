@@ -1,4 +1,13 @@
 <div>
+    <div>
+        <input
+            type="text"
+            wire:model.live="search"
+            placeholder="Search users..."
+            class="w-full px-4 py-2 border rounded-lg"
+        >
+    </div>
+
     {{-- Filters section - override renderFilters() method to add custom filters --}}
     @if(method_exists($this, 'renderFilters'))
         <div class="mb-6 space-y-4">
@@ -6,15 +15,8 @@
         </div>
     @endif
 
-    {{-- DEBUG: Show if columnRenderers exist --}}
-    @if(count($this->columnRenderers()) > 0)
-        <div class="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded">
-            <strong>DEBUG:</strong> Found {{ count($this->columnRenderers()) }} custom column renderer(s):
-            {{ implode(', ', array_keys($this->columnRenderers())) }}
-        </div>
-    @endif
-
     <div class="overflow-x-auto">
+        @livewire('livewire.confirm-modal')
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -45,16 +47,6 @@
                     <tr class="hover:bg-gray-50">
                         @foreach($headers as $column => $label)
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{-- DEBUG: Show which renderer is being used --}}
-                                @php
-                                    $renderers = $this->columnRenderers();
-                                    $hasRenderer = isset($renderers[$column]);
-                                @endphp
-
-                                @if($hasRenderer)
-                                    <span class="text-xs text-gray-400">[custom]</span>
-                                @endif
-
                                 {!! $this->renderColumn($row, $column) !!}
                             </td>
                         @endforeach
@@ -101,7 +93,9 @@
                 @php
                     $currentPage = $data->currentPage();
                     $lastPage = $data->lastPage();
-                    $onEachSide = $paginationLinks ?? 2;
+
+                    $totalButtons = 5;
+                    $onEachSide = intdiv($totalButtons - 1, 2);
 
                     // Calculate range
                     $start = max(1, $currentPage - $onEachSide);

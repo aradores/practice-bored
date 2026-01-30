@@ -2,15 +2,6 @@
 
 <div>
     <!-- Search -->
-    <div>
-        <input
-            type="text"
-            wire:model.live="search"
-            placeholder="Search users..."
-            class="w-full px-4 py-2 border rounded-lg"
-        >
-    </div>
-
     <!-- Filters -->
     <div class="flex gap-4">
         <select wire:model.live="statusFilter" class="px-4 py-2 border rounded-lg">

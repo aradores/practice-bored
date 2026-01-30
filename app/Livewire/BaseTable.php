@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Database\Eloquent\Builder;
 
 abstract class BaseTable extends Component
 {
@@ -12,12 +12,16 @@ abstract class BaseTable extends Component
 
     // Listening properties
     public string $search = '';
+
     public string $sortField = '';
+
     public string $sortDirection = 'asc';
+
     public array $filters = [];
 
     // Pagination
     public int $perPage = 10;
+
     public int $paginationLinks = 5; // Number of page links to show on each side
 
     protected $listeners = [
@@ -55,7 +59,7 @@ abstract class BaseTable extends Component
         }
 
         // Override this method in child classes for custom search logic
-        return $query->where(function($q) {
+        return $query->where(function ($q) {
             foreach ($this->searchableColumns() as $column) {
                 $q->orWhere($column, 'like', "%{$this->search}%");
             }
@@ -76,9 +80,11 @@ abstract class BaseTable extends Component
     protected function applyFilters(Builder $query): Builder
     {
         foreach ($this->filters as $field => $value) {
-            if (!empty($value)) {
+            if (! empty($value)) {
+
                 $query->where($field, $value);
             }
+
         }
 
         return $query;
@@ -89,7 +95,7 @@ abstract class BaseTable extends Component
      */
     protected function applySort(Builder $query): Builder
     {
-        if (!empty($this->sortField) && in_array($this->sortField, $this->sortableColumns())) {
+        if (! empty($this->sortField) && in_array($this->sortField, $this->sortableColumns())) {
             $query->orderBy($this->sortField, $this->sortDirection);
         }
 
@@ -174,6 +180,7 @@ abstract class BaseTable extends Component
      */
     protected function columnRenderers(): array
     {
+
         return [];
     }
 

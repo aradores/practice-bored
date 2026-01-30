@@ -1,5 +1,6 @@
 <aside class="flex gap-8 flex-col text-gray-500 h-full">
 
+
     <div class="relative w-full flex justify-center">
         <a class="block" href="{{ route('home') }}">
             <img src="{{ url('/images/repay-logo.svg') }}" alt="repay">
@@ -197,6 +198,7 @@
                         fill="white" />
                 </svg>
                 <p>Referral System</p>
+
             </a>
 
             {{-- System Balances --}}
