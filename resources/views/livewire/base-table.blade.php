@@ -1,17 +1,12 @@
 <div>
     <div>
-        <input
-            type="text"
-            wire:model.live="search"
-            placeholder="Search users..."
-            class="w-full px-4 py-2 border rounded-lg"
-        >
+
     </div>
 
     {{-- Filters section - override renderFilters() method to add custom filters --}}
     @if(method_exists($this, 'renderFilters'))
         <div class="mb-6 space-y-4">
-            {!! $this->renderFilters() !!}
+            {{-- {!! $this->renderFilters() !!} --}}
         </div>
     @endif
 

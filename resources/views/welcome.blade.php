@@ -21,6 +21,7 @@
     <body class="font-sans antialiased scrollbar-hide">
     <div class="min-h-screen bg-rp-neutral-100">
 
+
         <!-- Page Content -->
         <div class="h-screen">
             <div class="flex flex-row h-full w-full">
@@ -35,7 +36,7 @@
                         @livewire('admin.components.admin-top-navigation')
                     </div>
                     <main class="overflow-auto h-[calc(100vh-65px)]">
-                        {{ $slot }}
+                            <h1>Welcome to my world</h1>
                     </main>
                 </div>
             </div>

@@ -10,39 +10,32 @@ abstract class BaseTable extends Component
 {
     use WithPagination;
 
-    // Listening properties
-    public string $search = '';
-
-    public string $sortField = '';
-
-    public string $sortDirection = 'asc';
-
+    // Unified filters array (search is part of this)
     public array $filters = [];
 
-    // Pagination
+    public string $sortField = '';
+    public string $sortDirection = 'asc';
+
     public int $perPage = 10;
+    public int $paginationLinks = 5;
 
-    public int $paginationLinks = 5; // Number of page links to show on each side
-
+    // Listeners for external events
     protected $listeners = [
-        'searchUpdated' => 'handleSearch',
         'sortUpdated' => 'handleSort',
-        'filtersUpdated' => 'handleFilters',
     ];
 
     /**
-     * Define the query builder for the table
+     * Query builder for the table
      */
     abstract protected function query(): Builder;
 
     /**
-     * Define table headers
-     * Format: ['column_name' => 'Display Label', ...]
+     * Table headers
      */
     abstract protected function headers(): array;
 
     /**
-     * Define which columns are sortable
+     * Sortable columns
      */
     protected function sortableColumns(): array
     {
@@ -50,24 +43,7 @@ abstract class BaseTable extends Component
     }
 
     /**
-     * Apply search logic to the query
-     */
-    protected function applySearch(Builder $query): Builder
-    {
-        if (empty($this->search)) {
-            return $query;
-        }
-
-        // Override this method in child classes for custom search logic
-        return $query->where(function ($q) {
-            foreach ($this->searchableColumns() as $column) {
-                $q->orWhere($column, 'like', "%{$this->search}%");
-            }
-        });
-    }
-
-    /**
-     * Define searchable columns
+     * Searchable columns
      */
     protected function searchableColumns(): array
     {
@@ -75,27 +51,47 @@ abstract class BaseTable extends Component
     }
 
     /**
-     * Apply filters to the query
+     * Apply search filter
+     */
+    protected function applySearch(Builder $query): Builder
+    {
+        $search = $this->filters['search'] ?? null;
+
+        if (empty($search)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($search) {
+            foreach ($this->searchableColumns() as $column) {
+                $q->orWhere($column, 'like', "%{$search}%");
+            }
+        });
+    }
+
+    /**
+     * Apply all other filters
      */
     protected function applyFilters(Builder $query): Builder
     {
         foreach ($this->filters as $field => $value) {
-            if (! empty($value)) {
+            if ($field === 'search' || empty($value)) continue;
 
+            if (is_array($value)) {
+                $query->whereIn($field, $value);
+            } else {
                 $query->where($field, $value);
             }
-
         }
 
         return $query;
     }
 
     /**
-     * Apply sorting to the query
+     * Apply sorting
      */
     protected function applySort(Builder $query): Builder
     {
-        if (! empty($this->sortField) && in_array($this->sortField, $this->sortableColumns())) {
+        if (!empty($this->sortField) && in_array($this->sortField, $this->sortableColumns())) {
             $query->orderBy($this->sortField, $this->sortDirection);
         }
 
@@ -103,12 +99,11 @@ abstract class BaseTable extends Component
     }
 
     /**
-     * Get the final data for the table
+     * Get final paginated data
      */
     public function getData()
     {
         $query = $this->query();
-
         $query = $this->applySearch($query);
         $query = $this->applyFilters($query);
         $query = $this->applySort($query);
@@ -117,18 +112,18 @@ abstract class BaseTable extends Component
     }
 
     /**
-     * Handle search events
+     * Public method to update filters from external components
      */
-    public function handleSearch($search)
+    public function handleFilters(array $filters)
     {
-        $this->search = $search;
+        $this->filters = array_merge($this->filters, $filters);
         $this->resetPage();
     }
 
     /**
-     * Handle sort events
+     * Public method to update sorting
      */
-    public function handleSort($field)
+    public function handleSort(string $field)
     {
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
@@ -141,28 +136,11 @@ abstract class BaseTable extends Component
     }
 
     /**
-     * Handle filter events
+     * Sort toggle from column header
      */
-    public function handleFilters($filters)
-    {
-        $this->filters = $filters;
-        $this->resetPage();
-    }
-
-    /**
-     * Direct sort toggle from clicking column headers
-     */
-    public function sortBy($field)
+    public function sortBy(string $field)
     {
         $this->handleSort($field);
-    }
-
-    /**
-     * Update search directly
-     */
-    public function updatedSearch()
-    {
-        $this->resetPage();
     }
 
     /**
@@ -174,31 +152,21 @@ abstract class BaseTable extends Component
     }
 
     /**
-     * Define custom column renderers
-     * Return array of column => callback
-     * Callback receives ($row, $column)
+     * Column renderers
      */
     protected function columnRenderers(): array
     {
-
         return [];
     }
 
-    /**
-     * Check if a column has a custom renderer
-     */
     protected function hasCustomRenderer(string $column): bool
     {
         return isset($this->columnRenderers()[$column]);
     }
 
-    /**
-     * Render a column with custom renderer
-     */
     protected function renderColumn($row, string $column)
     {
         $renderers = $this->columnRenderers();
-
         if (isset($renderers[$column])) {
             return $renderers[$column]($row, $column);
         }
@@ -216,3 +184,4 @@ abstract class BaseTable extends Component
         ]);
     }
 }
+
